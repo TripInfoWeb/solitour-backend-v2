@@ -183,4 +183,4 @@ Temporary Items
 /src/main/resources/**.yml
 /src/main/resources/**.properties
 src/main/resources/docs/index.html
-/src/main/resources//**.sql
+/src/main/resources/**.sql
