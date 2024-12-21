@@ -24,6 +24,8 @@ DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `user_image`;
 DROP TABLE IF EXISTS `diary_day_content`;
 DROP TABLE IF EXISTS `diary`;
+DROP TABLE IF EXISTS `media_places`;
+DROP TABLE IF EXISTS `media`;
 
 CREATE TABLE `user_image`
 (
@@ -56,8 +58,8 @@ CREATE TABLE `user`
 
 CREATE TABLE `token`
 (
-    `token_id`      BIGINT       NOT NULL AUTO_INCREMENT,
-    `user_id`       BIGINT       NOT NULL,
+    `token_id`      BIGINT NOT NULL AUTO_INCREMENT,
+    `user_id`       BIGINT NOT NULL,
     `refresh_token` VARCHAR(250) NULL,
     `oauth_token`   VARCHAR(250) NULL,
     CONSTRAINT PK_TOKEN PRIMARY KEY (`token_id`),
@@ -314,7 +316,6 @@ CREATE TABLE `diary_day_content`
     CONSTRAINT `FK_diary_day_content_TO_diary` FOREIGN KEY (`diary_id`) REFERENCES `diary` (`diary_id`)
 );
 
-
 CREATE TABLE `term`
 (
     `term_id`                  BIGINT   NOT NULL AUTO_INCREMENT,
@@ -324,4 +325,25 @@ CREATE TABLE `term`
     `term_created_at`          DATETIME NOT NULL,
     PRIMARY KEY (`term_id`),
     CONSTRAINT `FK_term_TO_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+);
+
+CREATE TABLE media
+(
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    media_type VARCHAR(255),
+    title      VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE media_places
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    media_id    BIGINT       NOT NULL,
+    place_name  VARCHAR(255) NOT NULL,
+    place_type  VARCHAR(255) NOT NULL,
+    description TEXT,
+    hours       VARCHAR(255),
+    address     VARCHAR(255) NOT NULL,
+    latitude DOUBLE NOT NULL,
+    longitude DOUBLE NOT NULL,
+    FOREIGN KEY (media_id) REFERENCES media (id)
 );

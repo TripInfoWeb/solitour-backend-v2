@@ -43,7 +43,6 @@ public class Information {
     @JoinColumn(name = "place_id")
     private Place place;
 
-
     @Column(name = "information_title")
     private String title;
 
