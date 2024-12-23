@@ -1,4 +1,4 @@
-package solitour_backend.solitour.media.media_type;
+package solitour_backend.solitour.media_location.media_type;
 
 import lombok.Getter;
 
