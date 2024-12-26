@@ -1,7 +1,5 @@
 package solitour_backend.solitour.travel_plan.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +10,7 @@ import solitour_backend.solitour.tourist_spot.repository.TouristSpotRepository;
 import solitour_backend.solitour.travel_plan.dto.TravelPlanListResponse;
 import solitour_backend.solitour.travel_plan.dto.TravelRequest;
 import solitour_backend.solitour.travel_plan.entity.Days;
+import solitour_backend.solitour.travel_plan.entity.DaysDetail;
 import solitour_backend.solitour.travel_plan.entity.Plan;
 import solitour_backend.solitour.travel_plan.repository.TravelPlanRepository;
 
@@ -64,47 +63,65 @@ public class TravelPlanService {
         return TravelPlanListResponse.from(travelPlans);
     }
 
-    private List<Days> createDaysForPlan(List<Spot> combination, int totalDays, int spotsPerDay) {
+    private List<Days> createDaysForPlan(List<Spot> combination, int days, int spotsPerDay) {
         List<Days> daysList = new ArrayList<>();
-        int index = 0;
+        int spotIndex = 0;
 
-        for (int dayNumber = 1; dayNumber <= totalDays; dayNumber++) {
-            List<Spot> spotsForDay = combination.subList(index, index + spotsPerDay);
-            Days day = convertToDays(dayNumber, spotsForDay, "전체");
+        for (int dayNumber = 1; dayNumber <= days; dayNumber++) {
+            Days day = new Days();
+            day.setDayNumber(dayNumber);
+
+            // 하루에 해당하는 DaysDetail 생성
+            List<DaysDetail> dayDetails = new ArrayList<>();
+            for (int i = 0; i < spotsPerDay; i++) {
+                if (spotIndex >= combination.size()) break;
+
+                Spot spot = combination.get(spotIndex);
+                DaysDetail detail = DaysDetail.builder()
+                        .placeName(spot.getPlaceName())
+                        .latitude(spot.getLatitude())
+                        .longitude(spot.getLongitude())
+                        .day(day)
+                        .build();
+
+                dayDetails.add(detail);
+                spotIndex++;
+            }
+
+            day.setDetails(dayDetails);
             daysList.add(day);
-            index += spotsPerDay;
         }
 
         return daysList;
     }
 
-    private Days convertToDays(int dayNumber, List<?> spots, String category) {
-        Days days = new Days();
-        days.setDayNumber(dayNumber);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            String json = objectMapper.writeValueAsString(
-                    spots.stream().map(spot -> {
-                        if (spot instanceof TouristSpot) {
-                            return ((TouristSpot) spot).getTitle();
-                        } else if (spot instanceof MediaLocation) {
-                            return ((MediaLocation) spot).getLocationName();
-                        }
-                        return null;
-                    }).toList()
-            );
-            if (category.equals("음식점")) {
-                days.setRestaurants(json);
-            } else {
-                days.setLocations(json);
-            }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error converting spots to JSON", e);
-        }
-
-        return days;
-    }
+//    private Days convertToDays(int dayNumber, List<?> spots, String category) {
+//        Days days = new Days();
+//        days.setDayNumber(dayNumber);
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try {
+//            String json = objectMapper.writeValueAsString(
+//                    spots.stream().map(spot -> {
+//                        if (spot instanceof TouristSpot) {
+//                            return ((TouristSpot) spot).getTitle();
+//                        } else if (spot instanceof MediaLocation) {
+//                            return ((MediaLocation) spot).getLocationName();
+//                        }
+//                        return null;
+//                    }).toList()
+//            );
+//            if (category.equals("음식점")) {
+//                days.setRestaurants(json);
+//            } else {
+//                days.setLocations(json);
+//            }
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException("Error converting spots to JSON", e);
+//        }
+//
+//        return days;
+//    }
 
     private List<List<Spot>> generateCombinationsWithPriority(
             List<Spot> priorityItems,

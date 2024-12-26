@@ -16,11 +16,11 @@ public class TouristSpot implements Spot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
-    private String title;
+    @Column(name = "region", nullable = false)
+    private String region;
 
-//    @Column(name = "region", nullable = false)
-//    private String region;
+    @Column(name = "place_name")
+    private String placeName;
 
     @Column(name = "spot_type")
     @Convert(converter = SpotTypeConverter.class)
@@ -34,4 +34,5 @@ public class TouristSpot implements Spot {
 
     @Column(name = "longitude")
     private Double longitude;
+
 }

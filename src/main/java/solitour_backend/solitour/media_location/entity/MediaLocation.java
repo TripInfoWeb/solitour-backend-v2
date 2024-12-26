@@ -20,14 +20,14 @@ public class MediaLocation implements Spot {
     @Convert(converter = MediaTypeConverter.class)
     private String mediaType;
 
-    @Column(name = "title")
-    private String title;
+    @Column(name = "place_name")
+    private String placeName;
 
 //    @Column(name = "title_image")
 //    private String titleImage;
 
-    @Column(name = "location_name")
-    private String locationName;
+//    @Column(name = "location_name")
+//    private String locationName;
 
 //    @Column(name = "region", nullable = false)
 //    private String region;
