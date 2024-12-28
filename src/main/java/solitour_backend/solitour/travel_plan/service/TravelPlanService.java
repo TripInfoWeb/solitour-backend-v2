@@ -13,6 +13,7 @@ import solitour_backend.solitour.travel_plan.entity.Days;
 import solitour_backend.solitour.travel_plan.entity.DaysDetail;
 import solitour_backend.solitour.travel_plan.entity.Plan;
 import solitour_backend.solitour.travel_plan.repository.TravelPlanRepository;
+import solitour_backend.solitour.travel_plan.util.SpotShortestPathSorter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,15 +37,17 @@ public class TravelPlanService {
 
         List<Spot> convertedTouristSpots = new ArrayList<>(filteredTouristSpots);
         List<Spot> convertedMediaLocations = new ArrayList<>(filteredMediaLocations);
+        SpotShortestPathSorter sorter = new SpotShortestPathSorter();
 
         List<List<Spot>> combinations = generateCombinationsWithPriority(convertedMediaLocations,convertedTouristSpots , spotsPerDay * days, maxResults);
+        List<List<Spot>> sortedCombinations = sorter.sortCombinationsByShortestPath(combinations);
 
         if (combinations.isEmpty()) {
             throw new RuntimeException("Not enough travel spots to fulfill the plan.");
         }
 
         int planIndex = 1;
-        for (List<Spot> combination : combinations) {
+        for (List<Spot> combination : sortedCombinations) {
             Plan plan = new Plan();
             plan.setTitle("Plan " + planIndex);
             plan.setCreatedDate(java.time.LocalDate.now().toString());
@@ -94,34 +97,6 @@ public class TravelPlanService {
 
         return daysList;
     }
-
-//    private Days convertToDays(int dayNumber, List<?> spots, String category) {
-//        Days days = new Days();
-//        days.setDayNumber(dayNumber);
-//
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        try {
-//            String json = objectMapper.writeValueAsString(
-//                    spots.stream().map(spot -> {
-//                        if (spot instanceof TouristSpot) {
-//                            return ((TouristSpot) spot).getTitle();
-//                        } else if (spot instanceof MediaLocation) {
-//                            return ((MediaLocation) spot).getLocationName();
-//                        }
-//                        return null;
-//                    }).toList()
-//            );
-//            if (category.equals("음식점")) {
-//                days.setRestaurants(json);
-//            } else {
-//                days.setLocations(json);
-//            }
-//        } catch (JsonProcessingException e) {
-//            throw new RuntimeException("Error converting spots to JSON", e);
-//        }
-//
-//        return days;
-//    }
 
     private List<List<Spot>> generateCombinationsWithPriority(
             List<Spot> priorityItems,
