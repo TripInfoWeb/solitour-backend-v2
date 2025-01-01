@@ -1,4 +1,4 @@
-package solitour_backend.solitour.travel_plan.dto;
+package solitour_backend.solitour.travel_plan.dto.request;
 
 import solitour_backend.solitour.tourist_spot.spot_type.SpotType;
 

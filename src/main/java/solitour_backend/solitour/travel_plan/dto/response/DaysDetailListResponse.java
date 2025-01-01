@@ -1,6 +1,5 @@
-package solitour_backend.solitour.travel_plan.dto;
+package solitour_backend.solitour.travel_plan.dto.response;
 
-import solitour_backend.solitour.travel_plan.entity.Days;
 import solitour_backend.solitour.travel_plan.entity.DaysDetail;
 
 import java.util.List;

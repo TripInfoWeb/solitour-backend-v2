@@ -1,29 +1,40 @@
 package solitour_backend.solitour.travel_plan.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import solitour_backend.solitour.media_location.entity.MediaLocation;
 import solitour_backend.solitour.media_location.repository.MediaLocationRepository;
 import solitour_backend.solitour.tourist_spot.entity.TouristSpot;
 import solitour_backend.solitour.tourist_spot.repository.TouristSpotRepository;
-import solitour_backend.solitour.travel_plan.dto.TravelPlanListResponse;
-import solitour_backend.solitour.travel_plan.dto.TravelRequest;
+import solitour_backend.solitour.travel_plan.dto.request.UserPlanRequest;
+import solitour_backend.solitour.travel_plan.dto.response.TravelPlanListResponse;
+import solitour_backend.solitour.travel_plan.dto.request.TravelRequest;
+import solitour_backend.solitour.travel_plan.dto.response.UserPlanResponse;
 import solitour_backend.solitour.travel_plan.entity.Days;
 import solitour_backend.solitour.travel_plan.entity.DaysDetail;
 import solitour_backend.solitour.travel_plan.entity.Plan;
+import solitour_backend.solitour.travel_plan.entity.UserPlan;
+import solitour_backend.solitour.travel_plan.repository.DaysDetailRepository;
 import solitour_backend.solitour.travel_plan.repository.TravelPlanRepository;
+import solitour_backend.solitour.travel_plan.repository.UserPlanRepository;
 import solitour_backend.solitour.travel_plan.util.SpotShortestPathSorter;
+import solitour_backend.solitour.user.entity.User;
+import solitour_backend.solitour.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TravelPlanService {
     private final TouristSpotRepository touristSpotRepository;
     private final MediaLocationRepository mediaLocationRepository;
     private final TravelPlanRepository planRepository;
+    private final UserPlanRepository userPlanRepository;
+    private final UserRepository userRepository;
+    private final DaysDetailRepository daysDetailRepository;
 
     @Transactional
     public TravelPlanListResponse calculateTravelPlan(TravelRequest request) {
@@ -140,5 +151,78 @@ public class TravelPlanService {
             generateCombinationsHelper(items, tempCombination, i + 1, size, combinations, maxResults);
             tempCombination.remove(tempCombination.size() - 1);
         }
+    }
+
+    @Transactional
+    public void saveUserPlan(Long userId, Long planId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
+        Plan plan = planRepository.findById(planId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid plan ID: " + planId));
+
+        UserPlan userPlan = UserPlan.builder()
+                .user(user)
+                .plan(plan)
+                .build();
+
+        userPlanRepository.save(userPlan);
+    }
+
+    public UserPlanResponse getUserPlan(Long userPlanId) {
+        UserPlan userPlans = userPlanRepository.getUserPlan(userPlanId);
+
+        return UserPlanResponse.from(userPlans);
+    }
+
+    public List<UserPlanResponse> getUserPlanList(Long userId) {
+        List<UserPlan> userPlans = userPlanRepository.getUserPlanList(userId);
+        if (userPlans.isEmpty()) {
+            throw new IllegalArgumentException("No UserPlans found for user ID: " + userId);
+        }
+        return userPlans.stream()
+                .map(UserPlanResponse::from)
+                .toList();
+    }
+
+    @Transactional
+    public void updateUserPlan(Long userPlanId, UserPlanRequest userPlanRequest) {
+        UserPlan userPlan = userPlanRepository.findById(userPlanId)
+                .orElseThrow(() -> new IllegalArgumentException("UserPlan not found with ID: " + userPlanId));
+
+        Plan plan = userPlan.getPlan();
+        plan.setTitle(userPlanRequest.plan().title());
+
+        List<Days> updatedDaysList = userPlanRequest.plan().days().stream()
+                .map(dayRequest -> {
+                    Days day = new Days();
+                    day.setDayNumber(dayRequest.dayNumber());
+                    day.setPlan(plan);
+
+                    List<DaysDetail> updatedDetails = dayRequest.details().stream()
+                            .map(detailRequest -> DaysDetail.builder()
+                                    .placeName(detailRequest.placeName())
+                                    .latitude(detailRequest.latitude())
+                                    .longitude(detailRequest.longitude())
+                                    .day(day)
+                                    .build())
+                            .toList();
+
+                    day.setDetails(updatedDetails);
+                    return day;
+                })
+                .toList();
+
+        plan.getDays().clear();
+        plan.getDays().addAll(updatedDaysList);
+
+        planRepository.save(plan);
+    }
+
+    @Transactional
+    public void deleteUserPlan(Long userPlanId) {
+        if (!userPlanRepository.existsById(userPlanId)) {
+            throw new IllegalArgumentException("UserPlan not found with ID: " + userPlanId);
+        }
+        userPlanRepository.deleteById(userPlanId);
     }
 }

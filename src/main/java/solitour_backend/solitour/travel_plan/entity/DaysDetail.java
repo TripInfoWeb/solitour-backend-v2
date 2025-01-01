@@ -36,4 +36,10 @@ public class DaysDetail {
         this.longitude = longitude;
         this.days = day;
     }
+
+    public void updateDetails(DaysDetail updatedDetails) {
+        this.placeName = updatedDetails.placeName;
+        this.latitude = updatedDetails.latitude;
+        this.longitude = updatedDetails.longitude;
+    }
 }
