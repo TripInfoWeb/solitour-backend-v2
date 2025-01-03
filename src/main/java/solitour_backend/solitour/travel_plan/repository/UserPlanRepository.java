@@ -14,7 +14,6 @@ public interface UserPlanRepository extends JpaRepository<UserPlan, Long> {
     @Query("SELECT u FROM UserPlan u WHERE u.user.id = :userId")
     List<UserPlan> getUserPlanList(Long userId);
 
-
     @Query("SELECT u FROM UserPlan u WHERE u.id = :userPlanId")
     UserPlan getUserPlan(Long userPlanId);
 }

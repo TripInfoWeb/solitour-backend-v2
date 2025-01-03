@@ -3,6 +3,7 @@ package solitour_backend.solitour.media_location.entity;
 import com.amazonaws.services.ec2.model.LocationType;
 import jakarta.persistence.*;
 import lombok.Getter;
+import solitour_backend.solitour.media_location.media_type.MediaType;
 import solitour_backend.solitour.media_location.media_type.MediaTypeConverter;
 import solitour_backend.solitour.media_location.place_type.LocationTypeConverter;
 import solitour_backend.solitour.travel_plan.service.Spot;
@@ -18,19 +19,13 @@ public class MediaLocation implements Spot {
 
     @Column(name = "media_type")
     @Convert(converter = MediaTypeConverter.class)
-    private String mediaType;
+    private MediaType mediaType;
 
     @Column(name = "place_name")
     private String placeName;
 
-//    @Column(name = "title_image")
-//    private String titleImage;
-
-//    @Column(name = "location_name")
-//    private String locationName;
-
-//    @Column(name = "region", nullable = false)
-//    private String region;
+    @Column(name = "region", nullable = false)
+    private String region;
 
     @Column(name = "location_type")
     @Convert(converter = LocationTypeConverter.class)
