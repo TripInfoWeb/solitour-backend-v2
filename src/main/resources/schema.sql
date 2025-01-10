@@ -383,6 +383,7 @@ CREATE TABLE days_detail
 (
     days_detail_id BIGINT NOT NULL AUTO_INCREMENT,
     place_name     VARCHAR(255),
+    address        VARCHAR(255),
     latitude DOUBLE,
     longitude DOUBLE,
     days_id        BIGINT,

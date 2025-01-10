@@ -19,6 +19,9 @@ public class DaysDetail {
     @Column(name = "place_name")
     private String placeName;
 
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "latitude")
     private Double latitude;
 
@@ -30,8 +33,9 @@ public class DaysDetail {
     private Days days;
 
     @Builder
-    public DaysDetail(String placeName, Double latitude, Double longitude, Days day) {
+    public DaysDetail(String placeName, String address, Double latitude, Double longitude, Days day) {
         this.placeName = placeName;
+        this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.days = day;
@@ -39,6 +43,7 @@ public class DaysDetail {
 
     public void updateDetails(DaysDetail updatedDetails) {
         this.placeName = updatedDetails.placeName;
+        this.address = updatedDetails.address;
         this.latitude = updatedDetails.latitude;
         this.longitude = updatedDetails.longitude;
     }

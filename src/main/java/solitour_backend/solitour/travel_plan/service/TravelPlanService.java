@@ -93,6 +93,7 @@ public class TravelPlanService {
                 Spot spot = combination.get(spotIndex);
                 DaysDetail detail = DaysDetail.builder()
                         .placeName(spot.getPlaceName())
+                        .address(spot.getAddress())
                         .latitude(spot.getLatitude())
                         .longitude(spot.getLongitude())
                         .day(day)
@@ -201,6 +202,7 @@ public class TravelPlanService {
                     List<DaysDetail> updatedDetails = dayRequest.details().stream()
                             .map(detailRequest -> DaysDetail.builder()
                                     .placeName(detailRequest.placeName())
+                                    .address(detailRequest.address())
                                     .latitude(detailRequest.latitude())
                                     .longitude(detailRequest.longitude())
                                     .day(day)
