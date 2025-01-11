@@ -24,6 +24,14 @@ DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `user_image`;
 DROP TABLE IF EXISTS `diary_day_content`;
 DROP TABLE IF EXISTS `diary`;
+DROP TABLE IF EXISTS `media_places`;
+DROP TABLE IF EXISTS `media`;
+DROP TABLE IF EXISTS `media_location`;
+DROP TABLE IF EXISTS `tourist_spot`;
+DROP TABLE IF EXISTS `days_detail`;
+DROP TABLE IF EXISTS `days`;
+DROP TABLE IF EXISTS `plan`;
+DROP TABLE IF EXISTS `user_plan`;
 
 CREATE TABLE `user_image`
 (
@@ -56,8 +64,8 @@ CREATE TABLE `user`
 
 CREATE TABLE `token`
 (
-    `token_id`      BIGINT       NOT NULL AUTO_INCREMENT,
-    `user_id`       BIGINT       NOT NULL,
+    `token_id`      BIGINT NOT NULL AUTO_INCREMENT,
+    `user_id`       BIGINT NOT NULL,
     `refresh_token` VARCHAR(250) NULL,
     `oauth_token`   VARCHAR(250) NULL,
     CONSTRAINT PK_TOKEN PRIMARY KEY (`token_id`),
@@ -314,7 +322,6 @@ CREATE TABLE `diary_day_content`
     CONSTRAINT `FK_diary_day_content_TO_diary` FOREIGN KEY (`diary_id`) REFERENCES `diary` (`diary_id`)
 );
 
-
 CREATE TABLE `term`
 (
     `term_id`                  BIGINT   NOT NULL AUTO_INCREMENT,
@@ -324,4 +331,81 @@ CREATE TABLE `term`
     `term_created_at`          DATETIME NOT NULL,
     PRIMARY KEY (`term_id`),
     CONSTRAINT `FK_term_TO_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+);
+
+CREATE TABLE media
+(
+    media_id    BIGINT NOT NULL AUTO_INCREMENT,
+    media_type  VARCHAR(255),
+    media_name  VARCHAR(255),
+    media_image VARCHAR(255),
+    PRIMARY KEY (media_id)
+);
+
+CREATE TABLE media_location
+(
+    media_location_id BIGINT       NOT NULL AUTO_INCREMENT,
+    media_type        VARCHAR(255),
+    media_name        VARCHAR(255),
+    place_name        VARCHAR(255),
+    region            VARCHAR(255) NOT NULL,
+    location_type     VARCHAR(255),
+    description       TEXT,
+    operating_hours   VARCHAR(255),
+    address           VARCHAR(255),
+    latitude DOUBLE,
+    longitude DOUBLE,
+    PRIMARY KEY (media_location_id)
+);
+
+CREATE TABLE tourist_spot
+(
+    tourist_spot_id BIGINT       NOT NULL AUTO_INCREMENT,
+    region          VARCHAR(255) NOT NULL,
+    place_name      VARCHAR(255),
+    spot_type       VARCHAR(255),
+    address         VARCHAR(255),
+    latitude DOUBLE,
+    longitude DOUBLE,
+    PRIMARY KEY (tourist_spot_id)
+);
+
+CREATE TABLE days
+(
+    days_id    BIGINT NOT NULL AUTO_INCREMENT,
+    day_number INT    NOT NULL,
+    plan_id    BIGINT,
+    PRIMARY KEY (days_id),
+    FOREIGN KEY (plan_id) REFERENCES plan (plan_id) ON DELETE CASCADE
+);
+
+CREATE TABLE days_detail
+(
+    days_detail_id BIGINT NOT NULL AUTO_INCREMENT,
+    place_name     VARCHAR(255),
+    address        VARCHAR(255),
+    latitude DOUBLE,
+    longitude DOUBLE,
+    days_id        BIGINT,
+    PRIMARY KEY (days_detail_id),
+    FOREIGN KEY (days_id) REFERENCES days (days_id) ON DELETE CASCADE
+);
+
+CREATE TABLE plan
+(
+    plan_id      BIGINT       NOT NULL AUTO_INCREMENT,
+    title        VARCHAR(255) NOT NULL,
+    created_date VARCHAR(255) NOT NULL,
+    PRIMARY KEY (plan_id)
+);
+
+CREATE TABLE user_plan
+(
+    user_plan_id BIGINT    NOT NULL AUTO_INCREMENT,
+    user_id      BIGINT    NOT NULL,
+    plan_id      BIGINT    NOT NULL,
+    created_date TIMESTAMP NOT NULL,
+    PRIMARY KEY (user_plan_id),
+    FOREIGN KEY (user_id) REFERENCES user (user_id),
+    FOREIGN KEY (plan_id) REFERENCES plan (plan_id) ON DELETE CASCADE
 );

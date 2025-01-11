@@ -183,3 +183,5 @@ Temporary Items
 /src/main/resources/**.yml
 /src/main/resources/**.properties
 src/main/resources/docs/index.html
+src/main/resources/touristspot.sql
+src/main/resources/media_location.sql

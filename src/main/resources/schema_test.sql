@@ -1,4 +1,3 @@
--- 기존 테이블 삭제
 DROP TABLE IF EXISTS "user_image";
 DROP TABLE IF EXISTS "user";
 DROP TABLE IF EXISTS "token";
