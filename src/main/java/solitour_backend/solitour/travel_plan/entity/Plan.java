@@ -20,6 +20,9 @@ public class Plan {
     @Column(name = "title", nullable = false)
     private String title;
 
+    @Column(name = "content_category", nullable = false)
+    private String contentCategory;
+
     @Column(name = "created_date", nullable = false)
     private String createdDate;
 

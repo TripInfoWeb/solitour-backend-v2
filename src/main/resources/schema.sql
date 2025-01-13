@@ -393,9 +393,10 @@ CREATE TABLE days_detail
 
 CREATE TABLE plan
 (
-    plan_id      BIGINT       NOT NULL AUTO_INCREMENT,
-    title        VARCHAR(255) NOT NULL,
-    created_date VARCHAR(255) NOT NULL,
+    plan_id          BIGINT       NOT NULL AUTO_INCREMENT,
+    title            VARCHAR(255) NOT NULL,
+    content_category VARCHAR(255) NOT NULL,
+    created_date     VARCHAR(255) NOT NULL,
     PRIMARY KEY (plan_id)
 );
 

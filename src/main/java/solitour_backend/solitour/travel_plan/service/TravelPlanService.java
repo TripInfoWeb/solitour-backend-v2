@@ -61,6 +61,7 @@ public class TravelPlanService {
         for (List<Spot> combination : sortedCombinations) {
             Plan plan = new Plan();
             plan.setTitle("Plan " + planIndex);
+            plan.setContentCategory(request.contentCategory());
             plan.setCreatedDate(java.time.LocalDate.now().toString());
 
             List<Days> daysList = createDaysForPlan(combination, days, spotsPerDay);
