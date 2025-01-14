@@ -21,6 +21,9 @@ public class MediaLocation implements Spot {
     @Convert(converter = MediaTypeConverter.class)
     private MediaType mediaType;
 
+    @Column(name = "media_name")
+    private String mediaName;
+
     @Column(name = "place_name")
     private String placeName;
 
