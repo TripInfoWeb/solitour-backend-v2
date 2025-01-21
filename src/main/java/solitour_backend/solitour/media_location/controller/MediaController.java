@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import solitour_backend.solitour.auth.config.AuthenticationPrincipal;
+import solitour_backend.solitour.media_location.dto.response.MediaMainResponse;
 import solitour_backend.solitour.media_location.dto.response.MediaResponse;
 import solitour_backend.solitour.media_location.media_type.MediaType;
 import solitour_backend.solitour.media_location.service.MediaService;
@@ -26,7 +28,12 @@ public class MediaController {
     @GetMapping
     public ResponseEntity<Page<MediaResponse>> getMediaByType(@RequestParam("type") MediaType mediaType,
                                                               @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<MediaResponse> mediaList = mediaService.getMediaByType(mediaType,pageable);
+        Page<MediaResponse> mediaList = mediaService.getMediaByType(mediaType, pageable);
         return ResponseEntity.ok(mediaList);
+    }
+
+    @GetMapping("/main")
+    public ResponseEntity<List<MediaMainResponse>> getMediaMain(@AuthenticationPrincipal Long userId) {
+        return null;
     }
 }

@@ -20,8 +20,6 @@ DROP TABLE IF EXISTS `notice`;
 DROP TABLE IF EXISTS `qna_message`;
 DROP TABLE IF EXISTS `qna`;
 DROP TABLE IF EXISTS `term`;
-DROP TABLE IF EXISTS `user`;
-DROP TABLE IF EXISTS `user_image`;
 DROP TABLE IF EXISTS `diary_day_content`;
 DROP TABLE IF EXISTS `diary`;
 DROP TABLE IF EXISTS `media_places`;
@@ -30,8 +28,10 @@ DROP TABLE IF EXISTS `media_location`;
 DROP TABLE IF EXISTS `tourist_spot`;
 DROP TABLE IF EXISTS `days_detail`;
 DROP TABLE IF EXISTS `days`;
-DROP TABLE IF EXISTS `plan`;
 DROP TABLE IF EXISTS `user_plan`;
+DROP TABLE IF EXISTS `plan`;
+DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `user_image`;
 
 CREATE TABLE `user_image`
 (
@@ -375,8 +375,8 @@ CREATE TABLE days
     days_id    BIGINT NOT NULL AUTO_INCREMENT,
     day_number INT    NOT NULL,
     plan_id    BIGINT,
-    PRIMARY KEY (days_id),
-    FOREIGN KEY (plan_id) REFERENCES plan (plan_id) ON DELETE CASCADE
+    PRIMARY KEY (days_id)
+--     FOREIGN KEY (plan_id) REFERENCES plan (plan_id) ON DELETE CASCADE
 );
 
 CREATE TABLE days_detail

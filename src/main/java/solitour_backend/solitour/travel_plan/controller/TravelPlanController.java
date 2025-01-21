@@ -46,9 +46,8 @@ public class TravelPlanController {
     }
 
     @PutMapping("/user-plan/{userPlanId}")
-    public ResponseEntity<String> updateUserPlan(
-            @PathVariable Long userPlanId,
-            @RequestBody UserPlanRequest userPlanRequest) {
+    public ResponseEntity<String> updateUserPlan(@PathVariable Long userPlanId,
+                                                 @RequestBody UserPlanRequest userPlanRequest) {
 
         travelPlanService.updateUserPlan(userPlanId, userPlanRequest);
         return ResponseEntity.noContent().build();

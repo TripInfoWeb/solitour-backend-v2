@@ -8,4 +8,5 @@ import solitour_backend.solitour.tourist_spot.repository.TouristSpotRepositoryCu
 import java.util.List;
 
 public interface MediaLocationRepository extends JpaRepository<MediaLocation, Long>, MediaLocationRepositoryCustom {
+    List<MediaLocation> findByMediaNameIn(List<String> placeNames);
 }
