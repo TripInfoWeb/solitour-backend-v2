@@ -1,12 +1,14 @@
 package solitour_backend.solitour.admin.service;
 
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import solitour_backend.solitour.admin.dto.UserListResponseDTO;
 import solitour_backend.solitour.admin.dto.UserListWithPage;
@@ -15,6 +17,7 @@ import solitour_backend.solitour.user.entity.User;
 
 @Service
 @Slf4j
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AdminService {
 

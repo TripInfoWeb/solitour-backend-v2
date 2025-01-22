@@ -1,0 +1,9 @@
+[mysqld]
+server-id=2
+relay_log=/var/lib/mysql/mysql-relay-bin.log
+log_bin=/var/lib/mysql/mysql-bin.log
+read_only=1
+gtid_mode=ON
+enforce_gtid_consistency=ON
+replicate-ignore-db=mysql
+replicate-ignore-table=mysql.user

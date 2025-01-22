@@ -370,6 +370,25 @@ CREATE TABLE tourist_spot
     PRIMARY KEY (tourist_spot_id)
 );
 
+CREATE TABLE plan
+(
+    plan_id      BIGINT       NOT NULL AUTO_INCREMENT,
+    title        VARCHAR(255) NOT NULL,
+    created_date VARCHAR(255) NOT NULL,
+    PRIMARY KEY (plan_id)
+);
+
+CREATE TABLE user_plan
+(
+    user_plan_id BIGINT    NOT NULL AUTO_INCREMENT,
+    user_id      BIGINT    NOT NULL,
+    plan_id      BIGINT    NOT NULL,
+    created_date TIMESTAMP NOT NULL,
+    PRIMARY KEY (user_plan_id),
+    FOREIGN KEY (user_id) REFERENCES user (user_id),
+    FOREIGN KEY (plan_id) REFERENCES plan (plan_id) ON DELETE CASCADE
+);
+
 CREATE TABLE days
 (
     days_id    BIGINT NOT NULL AUTO_INCREMENT,
@@ -391,21 +410,4 @@ CREATE TABLE days_detail
     FOREIGN KEY (days_id) REFERENCES days (days_id) ON DELETE CASCADE
 );
 
-CREATE TABLE plan
-(
-    plan_id      BIGINT       NOT NULL AUTO_INCREMENT,
-    title        VARCHAR(255) NOT NULL,
-    created_date VARCHAR(255) NOT NULL,
-    PRIMARY KEY (plan_id)
-);
 
-CREATE TABLE user_plan
-(
-    user_plan_id BIGINT    NOT NULL AUTO_INCREMENT,
-    user_id      BIGINT    NOT NULL,
-    plan_id      BIGINT    NOT NULL,
-    created_date TIMESTAMP NOT NULL,
-    PRIMARY KEY (user_plan_id),
-    FOREIGN KEY (user_id) REFERENCES user (user_id),
-    FOREIGN KEY (plan_id) REFERENCES plan (plan_id) ON DELETE CASCADE
-);
