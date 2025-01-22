@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solitour_backend.solitour.media_location.dto.response.MediaMainResponse;
 import solitour_backend.solitour.media_location.dto.response.MediaResponse;
+import solitour_backend.solitour.media_location.dto.response.MediaTopKeyWordResponse;
 import solitour_backend.solitour.media_location.entity.Media;
 import solitour_backend.solitour.media_location.entity.MediaLocation;
 import solitour_backend.solitour.media_location.media_type.MediaType;
@@ -21,6 +22,7 @@ import solitour_backend.solitour.travel_plan.repository.DaysRepository;
 import solitour_backend.solitour.travel_plan.repository.TravelPlanRepository;
 import solitour_backend.solitour.travel_plan.repository.UserPlanRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,7 +51,7 @@ public class MediaService {
 
 
         List<Days> dayList = planList.stream()
-                .map(o -> daysRepository.findByPlan(o)).toList();
+                .map(daysRepository::findByPlan).toList();
 
         List<DaysDetail> daysDetails = daysDetailRepository.findByDaysIn(dayList);
 
@@ -68,7 +70,35 @@ public class MediaService {
                 .orElseThrow(
                         () -> new IllegalArgumentException("No MediaType found"));
 
+        List<MediaLocation> randomMediaLocation = mediaLocationRepository.findRandomByMediaType(mostCommonMediaType);
 
+        List<MediaMainResponse> mediaList = new ArrayList<>();
+
+        for (MediaLocation mediaLocation : randomMediaLocation) {
+            Media media = mediaRepository.findByMediaTypeAndMediaName(mostCommonMediaType, mediaLocation.getMediaName());
+
+            mediaList.add(new MediaMainResponse(media.getId(), media.getMediaName(), mediaLocation.getPlaceName(), media.getMediaImage()));
+        }
+
+        return mediaList;
+    }
+
+    public List<MediaTopKeyWordResponse> getMediaTopKeyWord() {
+        List<Plan> planList = userPlanRepository.findAll()
+                .stream()
+                .map(UserPlan::getPlan)
+                .collect(Collectors.toList());
+
+        List<Days> dayList = planList.stream()
+                .map(daysRepository::findByPlan).toList();
+
+        List<DaysDetail> daysDetails = daysDetailRepository.findByDaysIn(dayList);
+
+        List<String> placeNames = daysDetails.stream()
+                .map(DaysDetail::getPlaceName)
+                .collect(Collectors.toList());
+
+        return null;
     }
 
 
