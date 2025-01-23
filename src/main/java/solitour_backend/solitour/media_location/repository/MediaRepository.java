@@ -3,6 +3,7 @@ package solitour_backend.solitour.media_location.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import solitour_backend.solitour.media_location.entity.Media;
@@ -13,4 +14,8 @@ import java.util.List;
 public interface MediaRepository extends JpaRepository<Media, Long> {
     @Query("SELECT m FROM Media m WHERE m.mediaType = :mediaType")
     Page<Media> findMediaByType(@Param("mediaType") MediaType mediaType, Pageable pageable);
+
+    @Modifying
+    @Query("UPDATE Media m SET m.count = m.count + 1 WHERE m.mediaName IN :mediaNames")
+    void incrementCountByMediaNames(@Param("mediaNames") List<String> mediaNames);
 }

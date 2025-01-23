@@ -24,4 +24,6 @@ public class Media {
     @Column(name = "media_image")
     private String mediaImage;
 
+    @Column(name = "count")
+    private int count;
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solitour_backend.solitour.media_location.entity.MediaLocation;
 import solitour_backend.solitour.media_location.repository.MediaLocationRepository;
+import solitour_backend.solitour.media_location.repository.MediaRepository;
 import solitour_backend.solitour.tourist_spot.entity.TouristSpot;
 import solitour_backend.solitour.tourist_spot.repository.TouristSpotRepository;
 import solitour_backend.solitour.travel_plan.dto.request.UserPlanRequest;
@@ -31,13 +32,15 @@ import java.util.List;
 public class TravelPlanService {
     private final TouristSpotRepository touristSpotRepository;
     private final MediaLocationRepository mediaLocationRepository;
+    private final MediaRepository mediaRepository;
     private final TravelPlanRepository planRepository;
     private final UserPlanRepository userPlanRepository;
     private final UserRepository userRepository;
-    private final DaysDetailRepository daysDetailRepository;
 
     @Transactional
     public TravelPlanListResponse calculateTravelPlan(TravelRequest request) {
+        incrementMediaCount(request.contentTitles());
+
         List<Plan> plans = new ArrayList<>();
         int spotsPerDay = 6;
         int days = request.days();
@@ -76,6 +79,12 @@ public class TravelPlanService {
         List<Plan> travelPlans = planRepository.saveAll(plans);
 
         return TravelPlanListResponse.from(travelPlans);
+    }
+
+    private void incrementMediaCount(List<String> contentTitles) {
+        if (contentTitles != null && !contentTitles.isEmpty()) {
+            mediaRepository.incrementCountByMediaNames(contentTitles);
+        }
     }
 
     private List<Days> createDaysForPlan(List<Spot> combination, int days, int spotsPerDay) {

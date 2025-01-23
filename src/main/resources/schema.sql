@@ -339,6 +339,7 @@ CREATE TABLE media
     media_type  VARCHAR(255),
     media_name  VARCHAR(255),
     media_image VARCHAR(255),
+    count             INT,
     PRIMARY KEY (media_id)
 );
 
