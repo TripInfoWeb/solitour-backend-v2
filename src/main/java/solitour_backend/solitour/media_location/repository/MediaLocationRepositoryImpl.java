@@ -19,10 +19,10 @@ public class MediaLocationRepositoryImpl implements MediaLocationRepositoryCusto
     }
 
     @Override
-    public List<MediaLocation> findLocationByTitle(List<String> placeName) {
+    public List<MediaLocation> findLocationByTitle(List<String> contentTitles) {
         return queryFactory
                 .selectFrom(QMediaLocation.mediaLocation)
-                .where(QMediaLocation.mediaLocation.placeName.in(placeName))
+                .where(QMediaLocation.mediaLocation.mediaName.in(contentTitles))
                 .fetch();
     }
 }
