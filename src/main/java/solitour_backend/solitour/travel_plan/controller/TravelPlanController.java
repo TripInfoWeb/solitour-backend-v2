@@ -54,9 +54,9 @@ public class TravelPlanController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/user-plan/{userPlanId}")
-    public ResponseEntity<String> deleteUserPlan(@PathVariable Long userPlanId) {
-        travelPlanService.deleteUserPlan(userPlanId);
+    @DeleteMapping("/user-plan/{planId}")
+    public ResponseEntity<String> deleteUserPlan(@AuthenticationPrincipal Long userId, @PathVariable Long planId) {
+        travelPlanService.deleteUserPlan(userId, planId);
         return ResponseEntity.noContent().build();
     }
 }
