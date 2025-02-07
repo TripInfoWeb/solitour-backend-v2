@@ -45,12 +45,13 @@ public class TravelPlanController {
         return ResponseEntity.ok(userPlan);
     }
 
-    @PutMapping("/user-plan/{userPlanId}")
+    @PutMapping("/user-plan/{planId}")
     public ResponseEntity<String> updateUserPlan(
-            @PathVariable Long userPlanId,
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long planId,
             @RequestBody UserPlanRequest userPlanRequest) {
 
-        travelPlanService.updateUserPlan(userPlanId, userPlanRequest);
+        travelPlanService.updateUserPlan(userId,planId, userPlanRequest);
         return ResponseEntity.noContent().build();
     }
 

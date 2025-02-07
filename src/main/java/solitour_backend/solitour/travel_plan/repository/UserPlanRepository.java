@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import solitour_backend.solitour.travel_plan.entity.UserPlan;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserPlanRepository extends JpaRepository<UserPlan, Long> {
     @Query("SELECT u FROM UserPlan u WHERE u.user.id = :userId")
@@ -24,4 +25,7 @@ public interface UserPlanRepository extends JpaRepository<UserPlan, Long> {
     @Modifying
     @Query("DELETE FROM UserPlan WHERE user.id = :userId AND plan.id = :planId")
     void deleteUserPlan(Long userId, Long planId);
+
+    @Query("SELECT u FROM UserPlan u WHERE u.user.id = :userId AND u.plan.id = :planId")
+    Optional<UserPlan> findUserPlan(Long userId, Long planId);
 }
