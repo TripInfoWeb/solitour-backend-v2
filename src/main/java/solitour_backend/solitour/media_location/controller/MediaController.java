@@ -29,4 +29,10 @@ public class MediaController {
         Page<MediaResponse> mediaList = mediaService.getMediaByType(mediaType,pageable);
         return ResponseEntity.ok(mediaList);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<MediaResponse> getMediaByName(@RequestParam("mediaName") String mediaName) {
+        MediaResponse media = mediaService.getMediaByName(mediaName);
+        return ResponseEntity.ok(media);
+    }
 }
