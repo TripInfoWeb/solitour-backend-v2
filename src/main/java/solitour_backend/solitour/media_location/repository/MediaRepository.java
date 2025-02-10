@@ -13,4 +13,6 @@ import java.util.List;
 public interface MediaRepository extends JpaRepository<Media, Long> {
     @Query("SELECT m FROM Media m WHERE m.mediaType = :mediaType")
     Page<Media> findMediaByType(@Param("mediaType") MediaType mediaType, Pageable pageable);
+
+    Media findMediaByMediaName(String mediaName);
 }

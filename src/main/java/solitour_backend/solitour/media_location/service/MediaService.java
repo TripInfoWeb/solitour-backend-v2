@@ -18,4 +18,9 @@ public class MediaService {
         Page<Media> mediaPage = mediaRepository.findMediaByType(mediaType, pageable);
         return mediaPage.map(MediaResponse::from);
     }
+
+    public MediaResponse getMediaByName(String mediaName) {
+        Media media = mediaRepository.findMediaByMediaName(mediaName);
+        return MediaResponse.from(media);
+    }
 }
