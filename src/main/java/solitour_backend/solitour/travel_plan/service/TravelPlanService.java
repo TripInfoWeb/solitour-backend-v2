@@ -186,9 +186,9 @@ public class TravelPlanService {
     }
 
     @Transactional
-    public void updateUserPlan(Long userPlanId, UserPlanRequest userPlanRequest) {
-        UserPlan userPlan = userPlanRepository.findById(userPlanId)
-                .orElseThrow(() -> new IllegalArgumentException("UserPlan not found with ID: " + userPlanId));
+    public void updateUserPlan(Long userId, Long planId, UserPlanRequest userPlanRequest) {
+        UserPlan userPlan = userPlanRepository.findUserPlan(userId, planId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 UserPlan이 존재하지 않습니다."));
 
         Plan plan = userPlan.getPlan();
         plan.setTitle(userPlanRequest.plan().title());
@@ -221,10 +221,10 @@ public class TravelPlanService {
     }
 
     @Transactional
-    public void deleteUserPlan(Long userPlanId) {
-        if (!userPlanRepository.existsById(userPlanId)) {
-            throw new IllegalArgumentException("UserPlan not found with ID: " + userPlanId);
+    public void deleteUserPlan(Long userId, Long planId) {
+        if (!userPlanRepository.checkUserPlan(userId, planId)) {
+            throw new IllegalArgumentException("해당하는 UserPlan이 존재하지 않습니다.");
         }
-        userPlanRepository.deleteById(userPlanId);
+        userPlanRepository.deleteUserPlan(userId,planId);
     }
 }

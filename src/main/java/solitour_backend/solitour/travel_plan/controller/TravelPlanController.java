@@ -45,18 +45,19 @@ public class TravelPlanController {
         return ResponseEntity.ok(userPlan);
     }
 
-    @PutMapping("/user-plan/{userPlanId}")
+    @PutMapping("/user-plan/{planId}")
     public ResponseEntity<String> updateUserPlan(
-            @PathVariable Long userPlanId,
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long planId,
             @RequestBody UserPlanRequest userPlanRequest) {
 
-        travelPlanService.updateUserPlan(userPlanId, userPlanRequest);
+        travelPlanService.updateUserPlan(userId,planId, userPlanRequest);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/user-plan/{userPlanId}")
-    public ResponseEntity<String> deleteUserPlan(@PathVariable Long userPlanId) {
-        travelPlanService.deleteUserPlan(userPlanId);
+    @DeleteMapping("/user-plan/{planId}")
+    public ResponseEntity<String> deleteUserPlan(@AuthenticationPrincipal Long userId, @PathVariable Long planId) {
+        travelPlanService.deleteUserPlan(userId, planId);
         return ResponseEntity.noContent().build();
     }
 }
