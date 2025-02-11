@@ -1,6 +1,10 @@
 package solitour_backend.solitour.travel_plan.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solitour_backend.solitour.media_location.entity.MediaLocation;
@@ -50,7 +54,7 @@ public class TravelPlanService {
         List<Spot> convertedMediaLocations = new ArrayList<>(filteredMediaLocations);
         SpotShortestPathSorter sorter = new SpotShortestPathSorter();
 
-        List<List<Spot>> combinations = generateCombinationsWithPriority(convertedMediaLocations,convertedTouristSpots , spotsPerDay * days, maxResults);
+        List<List<Spot>> combinations = generateCombinationsWithPriority(convertedMediaLocations, convertedTouristSpots, spotsPerDay * days, maxResults);
         List<List<Spot>> sortedCombinations = sorter.sortCombinationsByShortestPath(combinations);
 
         if (combinations.isEmpty()) {
@@ -185,6 +189,11 @@ public class TravelPlanService {
                 .toList();
     }
 
+    public Page<UserPlan> getLatestUserPlans(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return userPlanRepository.findLatestUserPlans(pageable);
+    }
+
     @Transactional
     public void updateUserPlan(Long userId, Long planId, UserPlanRequest userPlanRequest) {
         UserPlan userPlan = userPlanRepository.findUserPlan(userId, planId)
@@ -225,6 +234,6 @@ public class TravelPlanService {
         if (!userPlanRepository.checkUserPlan(userId, planId)) {
             throw new IllegalArgumentException("해당하는 UserPlan이 존재하지 않습니다.");
         }
-        userPlanRepository.deleteUserPlan(userId,planId);
+        userPlanRepository.deleteUserPlan(userId, planId);
     }
 }

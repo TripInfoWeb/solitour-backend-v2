@@ -1,6 +1,7 @@
 package solitour_backend.solitour.travel_plan.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import solitour_backend.solitour.auth.config.Authenticated;
@@ -9,6 +10,7 @@ import solitour_backend.solitour.travel_plan.dto.request.TravelRequest;
 import solitour_backend.solitour.travel_plan.dto.request.UserPlanRequest;
 import solitour_backend.solitour.travel_plan.dto.response.TravelPlanListResponse;
 import solitour_backend.solitour.travel_plan.dto.response.UserPlanResponse;
+import solitour_backend.solitour.travel_plan.entity.UserPlan;
 import solitour_backend.solitour.travel_plan.service.TravelPlanService;
 
 import java.util.List;
@@ -32,6 +34,12 @@ public class TravelPlanController {
         return ResponseEntity.ok(userPlan);
     }
 
+    @GetMapping("/user-plan/all")
+    public ResponseEntity<Page<UserPlan>> getPagedLatestUserPlans(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size) {
+        return ResponseEntity.ok(travelPlanService.getLatestUserPlans(page, size));
+    }
 
     @PostMapping("/user-plan")
     public ResponseEntity<Void> saveUserPlan(@AuthenticationPrincipal Long userId, @RequestParam Long planId) {
