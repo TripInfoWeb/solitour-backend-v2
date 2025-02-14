@@ -63,6 +63,16 @@ public class TravelPlanController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/user-plan/title/{planId}")
+    public ResponseEntity<String> updateUserPlanTitle(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long planId,
+            @RequestBody String title) {
+
+        travelPlanService.updateUserPlanTitle(userId,planId, title);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/user-plan/{planId}")
     public ResponseEntity<String> deleteUserPlan(@AuthenticationPrincipal Long userId, @PathVariable Long planId) {
         travelPlanService.deleteUserPlan(userId, planId);

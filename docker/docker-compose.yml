@@ -1,4 +1,3 @@
-version: '3'
 services:
   solitour:
     image: library/mysql:8.3

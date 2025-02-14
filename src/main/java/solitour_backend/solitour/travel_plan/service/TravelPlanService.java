@@ -230,6 +230,17 @@ public class TravelPlanService {
     }
 
     @Transactional
+    public void updateUserPlanTitle(Long userId, Long planId, String title) {
+        UserPlan userPlan = userPlanRepository.findUserPlan(userId, planId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 UserPlan이 존재하지 않습니다."));
+
+        Plan plan = userPlan.getPlan();
+        plan.setTitle(title);
+
+        planRepository.save(plan);
+    }
+
+    @Transactional
     public void deleteUserPlan(Long userId, Long planId) {
         if (!userPlanRepository.checkUserPlan(userId, planId)) {
             throw new IllegalArgumentException("해당하는 UserPlan이 존재하지 않습니다.");
