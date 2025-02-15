@@ -118,16 +118,46 @@ public class TravelPlanService {
     ) {
         List<List<Spot>> combinations = new ArrayList<>();
 
-        generateCombinationsHelper(priorityItems, new ArrayList<>(), 0, size, combinations, maxResults);
+        generateCombinationsWithFallback(priorityItems, otherItems, size, combinations, maxResults);
 
         if (combinations.size() < maxResults) {
-            List<Spot> remainingItems = new ArrayList<>(otherItems);
-            remainingItems.removeAll(priorityItems);
-
-            generateCombinationsHelper(remainingItems, new ArrayList<>(), 0, size, combinations, maxResults);
+            generateCombinationsHelper(otherItems, new ArrayList<>(), 0, size, combinations, maxResults);
         }
 
         return combinations;
+    }
+
+    private void generateCombinationsWithFallback(
+            List<Spot> priorityItems, // MediaLocation (우선순위)
+            List<Spot> otherItems,    // TouristSpot (보충)
+            int size,
+            List<List<Spot>> combinations,
+            int maxResults
+    ) {
+        if (combinations.size() >= maxResults) return;
+
+        for (int priorityCount = priorityItems.size(); priorityCount >= 1; priorityCount--) {
+            List<List<Spot>> tempCombinations = new ArrayList<>();
+
+            // 우선순위 아이템 일부 선택 (priorityCount 개만큼)
+            generateCombinationsHelper(priorityItems, new ArrayList<>(), 0, priorityCount, tempCombinations, maxResults);
+
+            for (List<Spot> prioritySubset : tempCombinations) {
+                int remainingSize = size - prioritySubset.size();
+                List<List<Spot>> remainingCombinations = new ArrayList<>();
+
+                // 부족한 부분을 TouristSpot으로 채우기
+                generateCombinationsHelper(otherItems, new ArrayList<>(), 0, remainingSize, remainingCombinations, maxResults);
+
+                for (List<Spot> remainingSubset : remainingCombinations) {
+                    List<Spot> finalCombination = new ArrayList<>(prioritySubset);
+                    finalCombination.addAll(remainingSubset);
+                    combinations.add(finalCombination);
+
+                    if (combinations.size() >= maxResults) return;
+                }
+            }
+        }
     }
 
     private void generateCombinationsHelper(
