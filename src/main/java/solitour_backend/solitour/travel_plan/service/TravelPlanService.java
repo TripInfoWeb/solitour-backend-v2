@@ -1,6 +1,7 @@
 package solitour_backend.solitour.travel_plan.service;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.sql.Update;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import solitour_backend.solitour.media_location.entity.MediaLocation;
 import solitour_backend.solitour.media_location.repository.MediaLocationRepository;
 import solitour_backend.solitour.tourist_spot.entity.TouristSpot;
 import solitour_backend.solitour.tourist_spot.repository.TouristSpotRepository;
+import solitour_backend.solitour.travel_plan.dto.request.UpdatePlanTitleRequest;
 import solitour_backend.solitour.travel_plan.dto.request.UserPlanRequest;
 import solitour_backend.solitour.travel_plan.dto.response.TravelPlanListResponse;
 import solitour_backend.solitour.travel_plan.dto.request.TravelRequest;
@@ -225,6 +227,17 @@ public class TravelPlanService {
 
         plan.getDays().clear();
         plan.getDays().addAll(updatedDaysList);
+
+        planRepository.save(plan);
+    }
+
+    @Transactional
+    public void updateUserPlanTitle(Long userId, Long planId, UpdatePlanTitleRequest request) {
+        UserPlan userPlan = userPlanRepository.findUserPlan(userId, planId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 UserPlan이 존재하지 않습니다."));
+
+        Plan plan = userPlan.getPlan();
+        plan.setTitle(request.title());
 
         planRepository.save(plan);
     }

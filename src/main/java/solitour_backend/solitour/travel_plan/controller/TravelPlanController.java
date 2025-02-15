@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import solitour_backend.solitour.auth.config.Authenticated;
 import solitour_backend.solitour.auth.config.AuthenticationPrincipal;
 import solitour_backend.solitour.travel_plan.dto.request.TravelRequest;
+import solitour_backend.solitour.travel_plan.dto.request.UpdatePlanTitleRequest;
 import solitour_backend.solitour.travel_plan.dto.request.UserPlanRequest;
 import solitour_backend.solitour.travel_plan.dto.response.TravelPlanListResponse;
 import solitour_backend.solitour.travel_plan.dto.response.UserPlanResponse;
@@ -60,6 +61,16 @@ public class TravelPlanController {
             @RequestBody UserPlanRequest userPlanRequest) {
 
         travelPlanService.updateUserPlan(userId,planId, userPlanRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/user-plan/title/{planId}")
+    public ResponseEntity<String> updateUserPlanTitle(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long planId,
+            @RequestBody UpdatePlanTitleRequest request) {
+
+        travelPlanService.updateUserPlanTitle(userId,planId, request);
         return ResponseEntity.noContent().build();
     }
 
