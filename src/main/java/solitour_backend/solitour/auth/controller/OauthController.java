@@ -117,7 +117,7 @@ public class OauthController {
     }
 
     private String setCookieHeader(Cookie cookie) {
-        return String.format("%s=%s; Path=%s; Max-Age=%d;Secure; HttpOnly; SameSite=Lax",
+        return String.format("%s=%s; Path=%s; Max-Age=%d; Secure; HttpOnly; SameSite=None",
                 cookie.getName(), cookie.getValue(), cookie.getPath(), cookie.getMaxAge());
     }
 
