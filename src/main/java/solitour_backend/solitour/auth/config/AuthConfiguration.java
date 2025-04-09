@@ -42,6 +42,7 @@ public class AuthConfiguration implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         final String[] ALLOWED_URLS = {
                 "http://localhost:3000",
+                "https://www.solitourist.com",
                 "https://solitour.ssssksss.xyz",
                 "https://solitour-admin.ssssksss.xyz"
         };
