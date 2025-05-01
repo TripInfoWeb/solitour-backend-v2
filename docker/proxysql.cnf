@@ -32,3 +32,4 @@ mysql_variables=
     sessions_sort=true
     connect_retries_on_failure=10
 }
+

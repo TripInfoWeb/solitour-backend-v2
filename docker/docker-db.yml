@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   master:
     image: mysql:8.3
@@ -6,71 +7,65 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: solitour-master
+      MYSQL_DATABASE: solitour_master
       MYSQL_USER: soli
       MYSQL_PASSWORD: 1234
       TZ: Asia/Seoul
-      DB_HOST: host.docker.internal
     ports:
       - "3306:3306"
     volumes:
       - master_data:/var/lib/mysql
       - ./master.cnf:/etc/mysql/conf.d/my.cnf
+      - ./initdb/master-init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
     platform: linux/x86_64
     entrypoint: ["/bin/sh", "-c", "chmod 644 /etc/mysql/conf.d/my.cnf && docker-entrypoint.sh mysqld"]
-
-#  slave:
-#    image: mysql:8.3
-#    container_name: solitour-slave
-#    restart: always
-#    environment:
-#      MYSQL_ROOT_PASSWORD: 1234
-#      MYSQL_DATABASE: solitour-slave
-#      MYSQL_USER: soli
-#      MYSQL_PASSWORD: 1234
-#      TZ: Asia/Seoul
-#      DB_HOST: host.docker.internal
-#    ports:
-#      - "3307:3306"
-#    volumes:
-#      - slave_data:/var/lib/mysql
-#      - ./slave.cnf:/etc/mysql/conf.d/my.cnf
-#    command:
-#      - --character-set-server=utf8mb4
-#      - --collation-server=utf8mb4_unicode_ci
-#    platform: linux/x86_64
-#    entrypoint: ["/bin/sh", "-c", "chmod 644 /etc/mysql/conf.d/my.cnf && docker-entrypoint.sh mysqld"]
-#    depends_on:
-#      - master
 
   replicant:
     image: mysql:8.3
     container_name: solitour-replicant
     restart: always
+    depends_on:
+      - master
     environment:
       MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: solitour-replicant
+      MYSQL_DATABASE: solitour_replicant
       MYSQL_USER: soli
       MYSQL_PASSWORD: 1234
       TZ: Asia/Seoul
-      DB_HOST: host.docker.internal
     ports:
       - "3308:3306"
     volumes:
       - replicant_data:/var/lib/mysql
       - ./replicant.cnf:/etc/mysql/conf.d/my.cnf
+      - ./initdb/replicant-init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
     platform: linux/x86_64
     entrypoint: ["/bin/sh", "-c", "chmod 644 /etc/mysql/conf.d/my.cnf && docker-entrypoint.sh mysqld"]
+
+  proxysql:
+    image: proxysql/proxysql:latest
+    container_name: solitour-proxysql
+    restart: always
     depends_on:
       - master
+      - replicant
+    ports:
+      - "6032:6032"   # Admin interface
+      - "6033:6033"   # Client interface
+    volumes:
+      - ./proxysql.cnf:/etc/proxysql.cnf
+      - proxysql_data:/var/lib/proxysql
+    platform: linux/x86_64
+    entrypoint: ["/bin/sh", "-c", "chmod 644 /etc/proxysql.cnf && proxysql -f /etc/proxysql.cnf"]
 
 volumes:
   master_data:
-  slave_data:
   replicant_data:
+  proxysql_data:

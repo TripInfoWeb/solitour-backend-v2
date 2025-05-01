@@ -1,0 +1,20 @@
+services:
+  mysql-master:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: solitour
+      MYSQL_USER: soli
+      MYSQL_PASSWORD: 1234
+
+  mysql-replica:
+    image: mysql:8.0
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: solitour
+      MYSQL_USER: soli
+      MYSQL_PASSWORD: 1234
