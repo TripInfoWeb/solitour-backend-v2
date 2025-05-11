@@ -32,7 +32,7 @@ services:
       - master
     environment:
       MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: solitour_replicant
+      MYSQL_DATABASE: solitour_master
       MYSQL_USER: soli
       MYSQL_PASSWORD: 1234
       TZ: Asia/Seoul
@@ -57,8 +57,8 @@ services:
       - master
       - replicant
     ports:
-      - "6032:6032"   # Admin interface
-      - "6033:6033"   # Client interface
+      - "6032:6032"
+      - "6033:6033"
     volumes:
       - ./proxysql.cnf:/etc/proxysql.cnf
       - proxysql_data:/var/lib/proxysql
